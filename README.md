@@ -1,36 +1,101 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Playwright E2E 体験用サンプル
 
-## Getting Started
+Next.js (App Router) + shadcn/ui で作った **お問い合わせフォーム** を材料に、  
+**Playwright** の **録画（codegen）→ 自動テスト実行** を 5 分で体験できるリポジトリです。
 
-First, run the development server:
+> **関連記事**  
+> [はじめての Playwright ─ “録画” で体験する E2E テスト入門](https://delogs.jp/next-js/supplement/playwright-e2e)
+
+---
+
+## 🚀 クイックスタート
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# 1. クローン
+git clone https://github.com/your-org/playwright-e2e-sample.git
+cd playwright-e2e-sample
+
+# 2. 依存インストール（Playwright はまだ入っていない）
+npm install              # または pnpm / yarn
+
+# 3. Playwright を dev 依存に追加
+npm i -D @playwright/test
+
+# 4. ブラウザバイナリを取得（初回のみ）
+npx playwright install
+
+# 5. 開発サーバー起動
+npm run dev              # → http://localhost:3000
+
+# 6. 別ターミナルで録画を開始
+npx playwright codegen http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- 右ペイン＝ブラウザ、左ペイン＝自動生成されるテストコード
+- 操作後、💾 アイコンで `tests/contact.spec.ts` などに保存
+- テスト実行：`npx playwright test`
+- レポート：`playwright-report/index.html`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📁 ディレクトリ構成（抜粋）
 
-## Learn More
+```
+src/
+  app/
+    page.tsx            # お問い合わせフォーム（トップページに直置き）
+    thanks/page.tsx     # 送信後サンクスページ
+components/ui/          # shadcn/ui コンポーネント
+tests/                  # ← 録画したテストを入れる
+playwright.config.ts    # テスト設定（録画保存時に自動生成）
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛠️ 前提環境
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Tool              | Version (例)            | 備考                  |
+| ----------------- | ----------------------- | --------------------- |
+| Node.js           | 18 以上                 | 20.x で動作確認       |
+| npm / pnpm / yarn | 最新                    | 任意                  |
+| OS                | macOS / Windows / Linux | Apple Silicon でも OK |
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🔑 仕組みのポイント
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **フォームはトップページに直置き** — READMEの手順だけで試せる
+2. **Zod + React-Hook-Form** で必須チェック・型バリデーション
+3. **shadcn/ui** で見栄えを即確保
+4. **Playwright 設定はデフォルト** — 3 ブラウザ（Chromium / Firefox / WebKit）並列実行
+
+---
+
+## 🧪 テスト実行コマンド
+
+```bash
+# すべてのブラウザでテスト
+npx playwright test
+
+# 失敗ステップをデバッグ
+npx playwright test --debug
+```
+
+- **HTML レポート**：`playwright-report/index.html`
+- **録画リプレイ**：`npx playwright show-report`
+
+---
+
+## ✏️ カスタマイズ例
+
+| やりたいこと                       | 手順概要                                            |
+| ---------------------------------- | --------------------------------------------------- |
+| CI（GitHub Actions）で自動実行     | `.github/workflows/playwright.yml` を追加           |
+| コンポーネントを増やす             | `npx shadcn add textarea` など                      |
+| スクリーンショット比較の閾値を変更 | `expect(page).toHaveScreenshot({ threshold: 0.1 })` |
+
+---
+
+## 📜 License
+
+MIT © 2025 DELOGs

@@ -39,3 +39,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# --- Lint / Build cache ---
+.eslintcache
+.next/cache/
+.turbo/
+
+# --- Logs ---
+*.log
