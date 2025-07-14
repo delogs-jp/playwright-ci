@@ -12,8 +12,8 @@ Next.js (App Router) + shadcn/ui で作った **お問い合わせフォーム**
 
 ```bash
 # 1. クローン
-git clone https://github.com/your-org/playwright-e2e-sample.git
-cd playwright-e2e-sample
+git clone https://github.com/delogs-jp/playwright-e2e.git
+cd playwright-e2e
 
 # 2. 依存インストール（Playwright はまだ入っていない）
 npm install              # または pnpm / yarn
@@ -45,7 +45,7 @@ src/
   app/
     page.tsx            # お問い合わせフォーム（トップページに直置き）
     thanks/page.tsx     # 送信後サンクスページ
-components/ui/          # shadcn/ui コンポーネント
+  components/ui/          # shadcn/ui コンポーネント
 tests/                  # ← 録画したテストを入れる
 playwright.config.ts    # テスト設定（録画保存時に自動生成）
 ```
@@ -54,11 +54,10 @@ playwright.config.ts    # テスト設定（録画保存時に自動生成）
 
 ## 🛠️ 前提環境
 
-| Tool              | Version (例)            | 備考                  |
-| ----------------- | ----------------------- | --------------------- |
-| Node.js           | 18 以上                 | 20.x で動作確認       |
-| npm / pnpm / yarn | 最新                    | 任意                  |
-| OS                | macOS / Windows / Linux | Apple Silicon でも OK |
+| Tool              | Version (例) | 備考            |
+| ----------------- | ------------ | --------------- |
+| Node.js           | 18 以上      | 20.x で動作確認 |
+| npm / pnpm / yarn | 最新         | 任意            |
 
 ---
 
