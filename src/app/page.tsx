@@ -55,7 +55,7 @@ export default function Home() {
     // TODO: fetch("/api/contact", { method: "POST", body: JSON.stringify(data) })
 
     // テストしやすいよう送信後すぐサンクスページに遷移
-    router.push("/contact/thank-you");
+    router.push("/thank-you");
   };
 
   return (
