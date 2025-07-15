@@ -55,7 +55,7 @@ export default function Home() {
     // TODO: fetch("/api/contact", { method: "POST", body: JSON.stringify(data) })
 
     // テストしやすいよう送信後すぐサンクスページに遷移
-    router.push("/thank-you");
+    router.push("/thanks");
   };
 
   return (
@@ -204,6 +204,7 @@ export default function Home() {
           </form>
         </Form>
       </main>
+
       <footer className="flex flex-wrap items-center justify-center px-4 text-xs">
         <p>
           <span>Powered by：</span>
