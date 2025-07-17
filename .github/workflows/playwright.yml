@@ -18,13 +18,9 @@ jobs:
       # 3) 依存をインストール（Playwright の JS 本体もここで入る）
       - run: npm ci
 
-      # 4) Playwright ブラウザ & OS 依存ライブラリをインストール（推奨）
-      - uses: microsoft/playwright-install@v1
-        with:
-          # オプション不要。必要なブラウザと OS パッケージを自動取得
-          # cache は Action 内蔵機能で自動化されています
-          # 詳細: https://github.com/microsoft/playwright-install
-          check-latest: true # ← 任意: 最新 Playwright に追従したい場合
+      # 4)  Playwright ブラウザ & 依存ライブラリをインストール
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
 
       # 5) TypeScript 型チェック
       - run: npx tsc --noEmit
