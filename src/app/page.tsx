@@ -198,7 +198,7 @@ export default function Home() {
             />
 
             {/* 送信ボタン */}
-            <Button type="submit" className="my-4 w-full">
+            <Button type="submit" className="my-[999px] w-full">
               送信
             </Button>
           </form>
