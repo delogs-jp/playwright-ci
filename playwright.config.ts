@@ -16,7 +16,7 @@ export default defineConfig({
 
   expect: {
     toHaveScreenshot: {
-      /* ← 1% まで許容（必要に応じて微調整） */
+      /* 1.5% まで許容（必要に応じて微調整） */
       maxDiffPixelRatio: 0.015, // 0.015 = 1.5 %
     },
   },
