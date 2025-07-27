@@ -1,100 +1,100 @@
-# Playwright E2E 体験用サンプル
+# Playwright E2E × GitHub Actions Demo
 
-Next.js (App Router) + shadcn/ui で作った **お問い合わせフォーム** を材料に、  
-**Playwright** の **録画（codegen）→ 自動テスト実行** を 5 分で体験できるリポジトリです。
+[![DELOGs 記事へ](https://img.shields.io/badge/DELOGs-記事はこちら-1e90ff?logo=githubpages)](https://delogs.jp/next-js/supplement/playwright-ci)
 
-> **関連記事**  
-> [はじめての Playwright ─ “録画” で体験する E2E テスト入門](https://delogs.jp/next-js/supplement/playwright-e2e)
+記事「[CI で E2E を回す](https://delogs.jp/next-js/supplement/playwright-ci)」の実践結果のリポジトリです。
+
+---
+
+## 📦 Tech Stack
+
+| Tool / Lib               | Version | Purpose                          |
+| ------------------------ | :-----: | -------------------------------- |
+| **Next.js**              |  15.x   | サンプルフォーム（お問い合わせ） |
+| **TypeScript**           |   5.x   | 型安全                           |
+| **Playwright Test**      | 1.54.x  | E2E テスト                       |
+| **shadcn/ui + Tailwind** | latest  | UI コンポーネント                |
+| **GitHub Actions**       |    —    | CI / HTML レポート保存           |
+
+---
+
+## ✨ できること
+
+- `npx playwright codegen` で **ブラウザ操作を録画 → テスト自動生成**
+- `npx playwright test` で
+  - **スクリーンショット差分** によるレイアウト崩れ検知
+  - **フォーム送信** の正常動作テスト
+- Push / PR ごとに GitHub Actions が
+  1. Next.js をポート **3010** で自動起動
+  2. Playwright ブラウザをダウンロード & キャッシュ
+  3. テスト実行 → **HTML レポート** をアーティファクトに添付
+- ブランチ保護ルールで **緑 ✓ 以外は main にマージ不可**
 
 ---
 
 ## 🚀 クイックスタート
 
-```bash
-# 1. クローン
-git clone https://github.com/delogs-jp/playwright-e2e.git
-cd playwright-e2e
-
-# 2. 依存インストール（Playwright はまだ入っていない）
-npm install              # または pnpm / yarn
-
-# 3. Playwright を dev 依存に追加
-npm i -D @playwright/test
-
-# 4. ブラウザバイナリを取得（初回のみ）
-npx playwright install
-
-# 5. 開発サーバー起動
-npm run dev              # → http://localhost:3000
-
-# 6. 別ターミナルで録画を開始
-npx playwright codegen http://localhost:3000
-```
-
-- 右ペイン＝ブラウザ、左ペイン＝自動生成されるテストコード
-- 操作後、💾 アイコンで `tests/contact.spec.ts` などに保存
-- テスト実行：`npx playwright test`
-- レポート：`playwright-report/index.html`
-
----
-
-## 📁 ディレクトリ構成（抜粋）
-
-```
-src/
-  app/
-    page.tsx            # お問い合わせフォーム（トップページに直置き）
-    thanks/page.tsx     # 送信後サンクスページ
-  components/ui/          # shadcn/ui コンポーネント
-tests/                  # ← 録画したテストを入れる
-playwright.config.ts    # テスト設定（録画保存時に自動生成）
-```
-
----
-
-## 🛠️ 前提環境
-
-| Tool              | Version (例) | 備考            |
-| ----------------- | ------------ | --------------- |
-| Node.js           | 18 以上      | 20.x で動作確認 |
-| npm / pnpm / yarn | 最新         | 任意            |
-
----
-
-## 🔑 仕組みのポイント
-
-1. **フォームはトップページに直置き** — READMEの手順だけで試せる
-2. **Zod + React-Hook-Form** で必須チェック・型バリデーション
-3. **shadcn/ui** で見栄えを即確保
-4. **Playwright 設定はデフォルト** — 3 ブラウザ（Chromium / Firefox / WebKit）並列実行
-
----
-
-## 🧪 テスト実行コマンド
+### 1. セットアップ
 
 ```bash
-# すべてのブラウザでテスト
-npx playwright test
+git clone https://github.com/delogs-jp/playwright-ci.git
+cd playwright-ci
 
-# 失敗ステップをデバッグ
-npx playwright test --debug
+# 依存ライブラリ
+npm install
+
+# Playwright ブラウザバイナリ
+npx playwright install --with-deps
 ```
 
-- **HTML レポート**：`playwright-report/index.html`
-- **録画リプレイ**：`npx playwright show-report`
+### 2. ローカルサーバー & テスト
+
+```bash
+# 開発サーバーは自動起動されるので不要
+# そのままテスト実行
+npx playwright test --reporter=html
+npx playwright show-report  # レポートをブラウザで確認
+```
+
+> **初回だけ** ベースライン画像を生成する必要があります  
+> （スクリーンショット差分テスト用）
+
+```bash
+npx playwright test tests/contact-visual.spec.ts --update-snapshots
+```
+
+### 3. GitHub Actions CI
+
+1. リポジトリを GitHub にプッシュ
+2. `.github/workflows/playwright.yml` が自動で実行
+3. **Actions タブ → 実行 → Artifacts → `playwright-report`** で  
+   失敗したステップのスクショ / Diff を参照できます
 
 ---
 
-## ✏️ カスタマイズ例
+## 📂 主要ファイル
 
-| やりたいこと                       | 手順概要                                            |
-| ---------------------------------- | --------------------------------------------------- |
-| CI（GitHub Actions）で自動実行     | `.github/workflows/playwright.yml` を追加           |
-| コンポーネントを増やす             | `npx shadcn add textarea` など                      |
-| スクリーンショット比較の閾値を変更 | `expect(page).toHaveScreenshot({ threshold: 0.1 })` |
+```
+.
+├─ .github/workflows/playwright.yml      # CI 定義
+├─ playwright.config.ts                  # webServer & スナップショット設定
+├─ tests/
+│  ├─ contact-happy.spec.ts              # フォーム正常系
+│  └─ contact-visual.spec.ts             # レイアウト差分チェック
+└─ src/                                  # Next.js サンプルアプリ
+```
+
+## 📜 ライセンス
+
+MIT
+
+> サンプルのコード・記事内容はご自由に利用 / 改変ください  
+> （引用時はリンクいただけるとうれしいです 🙌）
 
 ---
 
-## 📜 License
+### 🙏 Credits / Author
 
-MIT © 2025 DELOGs
+- **DELOGs** – <https://delogs.jp>  
+  技術ブログ × Web サービスで “届ける” 技術を探求中
+- Twitter / X: [@DELOGs2506](https://x.com/DELOGs2506)

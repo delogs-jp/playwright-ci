@@ -132,6 +132,7 @@ export default function Home() {
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
+                    name={field.name}
                   >
                     <FormControl>
                       <SelectTrigger id="category-trigger">
