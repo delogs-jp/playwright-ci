@@ -13,8 +13,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Playwrightの体験用の素材｜【DELOGs】",
-  description: "DELOGs記事の「はじめてのPlaywright-録画で体験する E2E テスト入門」の体験用の素材です。",
+  title: "Playwrightの体験用の結果です｜【DELOGs】",
+  description:
+    "DELOGs記事の「GitHub Actions ではじめる Playwright E2E CI」の実施結果です。",
 };
 
 export default function RootLayout({
